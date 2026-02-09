@@ -28,17 +28,3 @@ jobs:
         run: |
           pr_branch="${{ github.head_ref }}"
           echo "PR branch: $pr_branch"
-
-  notify-failure:
-    needs: [ check-release, publish ]
-    if: failure() && needs.check-release.outputs.is_release == 'true'
-    runs-on: macos-latest
-    
-    steps:
-      - name: Notify failure
-        run: |
-          echo "## ❌ Release Publication Failed!" >> $GITHUB_STEP_SUMMARY
-          echo "- **Version**: v${{ needs.check-release.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Branch**: ${{ needs.check-release.outputs.release_branch }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Status**: Failed to publish to Maven Central" >> $GITHUB_STEP_SUMMARY
-          echo "- **Action Required**: Check logs and retry publication manually" >> $GITHUB_STEP_SUMMARY
